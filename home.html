@@ -1,0 +1,232 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>WAYR — Who are you, really?</title>
+
+  <style>
+    /*Fontstack*/
+    :root{
+      --max-width: 920px;
+      --accent-radius: 8px;
+      --muted: #666;
+    }
+
+    html,body{
+      height:100%;
+      margin:0;
+      font-family: "Lucida Grande","Lucida Sans Unicode", "Lucida Sans", Geneva, Verdana, sans-serif;
+      color:#0b0b0b;
+      background:#fff;
+      -webkit-font-smoothing:antialiased;
+      -moz-osx-font-smoothing:grayscale;
+      line-height:1.45;
+    }
+
+    /* page container */
+    .wrap{
+      max-width:var(--max-width);
+      margin: 48px auto;
+      padding: 0 28px;
+    }
+
+    /* header */
+    header{
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      margin-bottom:36px;
+    }
+
+    .logo {
+     font-weight: 700;
+     font-size: 20px;
+      letter-spacing: 1px;
+      text-decoration: none;   
+      color: inherit;          
+      display: inline-block;   
+      cursor: pointer;         
+    }
+
+    .logo:hover {
+     text-decoration: underline;
+    }
+    nav{
+      display:flex;
+      gap:20px;
+      align-items:center;
+      font-size:14px;
+    }
+
+    nav a{
+      color:#111;
+      text-decoration:none;
+      opacity:0.9;
+    }
+
+    .btn-ghost{
+      border-radius:10px;
+      border:none;
+      padding:10px 14px;
+      font-size:20px;
+      cursor:pointer;
+      background:#000;
+      color:#fff;
+      box-shadow: none;
+    }
+    
+    /* hero */
+    .hero{
+      display:flex;
+      gap:40px;
+      align-items:flex-start;
+      margin-top:18px;
+      margin-bottom:56px;
+    }
+
+    .hero-left{
+      flex:1;
+    }
+
+    h1{
+      font-size:48px;
+      margin:0 0 18px 0;
+      line-height:1.02;
+      font-weight:800;
+    }
+
+    .lead{
+      color:var(--muted);
+      max-width:620px;
+      margin:0 0 22px 0;
+      font-size:15px;
+    }
+
+    .create-btn{
+      display:inline-block;
+      padding:12px 28px;
+      background:#000;
+      color:#fff;
+      text-decoration:none;
+      border-radius:8px;
+      font-weight:600;
+      letter-spacing:0.2px;
+    }
+
+    /* sectionstyle */
+    section{
+      margin-bottom:44px;
+    }
+
+    .section-title{
+      font-size:26px;
+      margin:12px 0 18px 0;
+      font-weight:700;
+    }
+
+    /* banner1 */
+    .banner{
+      height:84px;
+      border-radius:8px;
+      overflow:hidden;
+      background-image: url('o.png'); 
+      background-size: cover;
+      background-position:center;
+      margin-bottom:14px;
+    }
+
+    /* descriptive paragraph */
+    .desc{
+      color:var(--muted);
+      font-size:14px;
+      line-height:1.6;
+      max-width:900px;
+    }
+
+    /* banner2 */
+    .banner-tall{
+      height:84px;
+      border-radius:8px;
+      overflow:hidden;
+      background-image: url('t.png'); 
+      background-size:cover;
+      background-position:center;
+      margin-bottom:14px;
+    }
+
+    /* small-screen adjustments */
+    @media (max-width:760px){
+      h1{
+        font-size:36px;
+      }
+      .hero{
+        flex-direction:column;
+      }
+      .banner, .banner-tall{
+        height:72px;
+      }
+      .wrap{
+        padding: 0 20px;
+      }
+    }
+
+    /* accessibility focus */
+    a:focus, button:focus { outline: 3px solid rgba(0,0,0,0.08); outline-offset:3px; }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+
+    <header>
+      <a class="logo" href="home.html">WAYR</a>
+      <nav aria-label="Main navigation">
+        <a href="#">Resources</a>
+        <a href="#" style="text-decoration:underline;">Comparison Tool</a>
+        <a class="btn-ghost" href="you.html" aria-label="You">You!</a>
+      </nav>
+    </header>
+
+    <main>
+      <!-- Hero -->
+      <div class="hero" role="region" aria-labelledby="hero-heading">
+        <div class="hero-left">
+          <h1 id="hero-heading">Who are you,<br/>really?</h1>
+          <p class="lead">
+            WAYR is a safe space for you to explore your identity, reflect on your growth, and discover what makes you unique. This platform is designed to help you reflect on your personality, values, and interests, and to track how you change and grow over time. Remember, there are no right or wrong answers here. Just your story.
+          </p>
+
+          <a class="create-btn" href="create.html" role="button">Create!</a>
+        </div>
+
+        <!-- empty right column visually like screenshot (keeps header aligned) -->
+        <div style="width:160px;"></div>
+      </div>
+
+      <!-- Section 1 -->
+      <section aria-labelledby="what-title">
+        <h2 id="what-title" class="section-title">What is this dang website?</h2>
+
+        <!-- banner -- replace banner.jpg with image file -->
+        <div class="banner" aria-hidden="true"></div>
+
+        <p class="desc">
+          This website lets you create your own personal psychology profile by answering guided questions and reflections. You can save your profile on your own device, edit it over time, and export it as a file. Later, you can re-import older profiles to compare them with your current one and see how your thoughts, moods, or perspectives may have changed. The site also provides space for journaling and guided reflections, as well as links to trusted mental health resources for extra support.
+        </p>
+      </section>
+
+      <!-- Section 2 -->
+      <section aria-labelledby="privacy-title">
+        <h2 id="privacy-title" class="section-title">Whoa, wait. Why should I give you my data?</h2>
+
+        <div class="banner-tall" aria-hidden="true"></div>
+
+        <p class="desc">
+          Your data is never sent to any server or stored online. Everything you write stays inside your browser using secure local storage (IndexedDB). If you want to save your progress, you can export your profile as a file and keep it on your own device. This means only you decide where your information goes and who has access to it. The website does not collect, share, or track any personal details; your reflections remain completely private.
+        </p>
+      </section>
+    </main>
+
+  </div>
+</body>
+</html>

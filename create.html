@@ -1,0 +1,290 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Create Profile — WAYR</title>
+  <script src="https://unpkg.com/localbase/dist/localbase.dev.js"></script>
+
+<style>
+    /*Fontstack*/
+    :root{
+      --max-width: 920px;
+      --accent-radius: 8px;
+      --muted: #666;
+    }
+
+    html,body{
+      height:100%;
+      margin:0;
+      font-family: "Lucida Grande","Lucida Sans Unicode", "Lucida Sans", Geneva, Verdana, sans-serif;
+      color:#0b0b0b;
+      background:#fff;
+      -webkit-font-smoothing:antialiased;
+      -moz-osx-font-smoothing:grayscale;
+      line-height:1.45;
+    }
+
+    /* page container */
+    .wrap{
+      max-width:var(--max-width);
+      margin: 48px auto;
+      padding: 0 28px;
+    }
+
+    /* header */
+    header{
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      margin-bottom:36px;
+    }
+
+    .logo {
+     font-weight: 700;
+     font-size: 20px;
+      letter-spacing: 1px;
+      text-decoration: none;   
+      color: inherit;          
+      display: inline-block;   
+      cursor: pointer;         
+    }
+
+    .logo:hover {
+     text-decoration: underline;
+    }
+
+    nav{
+      display:flex;
+      gap:20px;
+      align-items:center;
+      font-size:14px;
+    }
+
+    nav a{
+      color:#111;
+      text-decoration:none;
+      opacity:0.9;
+    }
+
+    .btn-ghost{
+      border-radius:10px;
+      border:none;
+      padding:10px 14px;
+      font-size:20px;
+      cursor:pointer;
+      background:#000;
+      color:#fff;
+      box-shadow: none;
+    }
+
+    /* hero */
+    .hero{
+      display:flex;
+      gap:40px;
+      align-items:flex-start;
+      margin-top:18px;
+      margin-bottom:56px;
+    }
+
+    .hero-left{
+      flex:1;
+    }
+
+    h1{
+      font-size:48px;
+      margin:0 0 18px 0;
+      line-height:1.02;
+      font-weight:800;
+    }
+
+    .lead{
+      color:var(--muted);
+      max-width:620px;
+      margin:0 0 22px 0;
+      font-size:15px;
+    }
+
+    .create-btn{
+      display:inline-block;
+      padding:12px 28px;
+      background:#000;
+      color:#fff;
+      text-decoration:none;
+      border-radius:8px;
+      font-weight:600;
+      letter-spacing:0.2px;
+    }
+
+    /* Page title */
+    h1 {
+      font-size: 36px;
+      margin-bottom: 8px;
+    }
+
+    p {
+      color: var(--muted);
+      max-width: 500px;
+      line-height: 1.5;
+      margin-bottom: 30px;
+    }
+
+    .input-box {
+      margin-bottom: 20px;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+    }
+
+    label {
+      font-size: 15px;
+      margin-bottom: 6px;
+    }
+
+    input[type="text"] {
+      padding: 8px 10px;
+      font-size: 15px;
+      border-radius: 6px;
+      border: 1px solid #ccc;
+      width: 260px;
+      outline: none;
+    }
+
+    input[type="text"]:focus {
+      border-color: #000;
+    }
+
+    canvas {
+      border: 2px solid #555;
+      border-radius: 10px;
+      background-color: #fff;
+      cursor: crosshair;
+      margin-bottom: 20px;
+    }
+
+    .controls {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 20px;
+    }
+
+    button {
+      background-color: #000;
+      color: white;
+      border: none;
+      padding: 8px 16px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 14px;
+    }
+
+    button:hover {
+      background-color: #333;
+    }
+
+    #savedMsg {
+      margin-top: 10px;
+      color: green;
+      font-weight: 600;
+      display: none;
+    }
+
+    @media (max-width: 700px) {
+      h1 { font-size: 28px; }
+      nav { gap: 12px; }
+    }
+    /* accessibility focus */
+    a:focus, button:focus { outline: 3px solid rgba(0,0,0,0.08); outline-offset:3px; }
+
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <header>
+      <a class="logo" href="home.html">WAYR</a>
+      <nav aria-label="Main navigation">
+        <a href="#">Resources</a>
+        <a href="#" style="text-decoration:underline;">Comparison Tool</a>
+        <a class="btn-ghost" href="you.html">You!</a>
+      </nav>
+    </header>
+
+    <main>
+      <h1>Create Your Profile</h1>
+      <p>Enter your name and draw a quick self-portrait below. Your data will be saved locally on your device.</p>
+
+      <div class="input-box">
+        <label for="nameInput">Name:</label>
+        <input type="text" id="nameInput" placeholder="Enter your name" />
+      </div>
+
+      <canvas id="drawBox" width="400" height="300"></canvas>
+
+      <div class="controls">
+        <button id="clearBtn">Clear</button>
+        <button id="saveBtn">Save</button>
+      </div>
+
+      <p id="savedMsg">✅ Profile saved successfully!</p>
+    </main>
+  </div>
+
+  <script>
+    let db=new Localbase('db');
+
+    const canvas=document.getElementById('drawBox');
+    const ctx=canvas.getContext('2d');
+    const clearBtn=document.getElementById('clearBtn');
+    const saveBtn=document.getElementById('saveBtn');
+    const nameInput=document.getElementById('nameInput');
+    const savedMsg=document.getElementById('savedMsg');
+
+    let drawing=false;
+
+    canvas.addEventListener('mousedown', (e) => {
+      drawing=true;
+      ctx.beginPath();
+      ctx.moveTo(e.offsetX, e.offsetY);
+    });
+
+    canvas.addEventListener('mousemove', (e) => {
+      if (drawing) {
+        ctx.lineTo(e.offsetX, e.offsetY);
+        ctx.strokeStyle='#000';
+        ctx.lineWidth=2;
+        ctx.lineCap='round';
+        ctx.stroke();
+      }
+    });
+
+    canvas.addEventListener('mouseup', () => drawing = false);
+    canvas.addEventListener('mouseleave', () => drawing = false);
+
+    clearBtn.addEventListener('click', () => {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+    });
+
+    saveBtn.addEventListener('click', async () => {
+      const name=nameInput.value.trim();
+      if (!name) {
+        alert('Please enter your name.');
+        return;
+      }
+
+      const drawingData=canvas.toDataURL();
+
+      await db.collection('users').add({
+        id: Date.now(),
+        name: name,
+        drawing: drawingData
+      });
+
+      savedMsg.style.display='block';
+      setTimeout(() => savedMsg.style.display = 'none', 3000);
+
+      nameInput.value='';
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+    });
+  </script>
+</body>
+</html>
