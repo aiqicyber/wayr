@@ -7,7 +7,7 @@
   <script src="https://unpkg.com/localbase/dist/localbase.dev.js"></script>
 
 <style>
-    /*Fontstack*/
+    /*fontstack DONT CHANGE DUMBASS*/
     :root{
       --max-width: 920px;
       --accent-radius: 8px;
@@ -25,14 +25,13 @@
       line-height:1.45;
     }
 
-    /* page container */
+    /*PAGE CONTAINER ALR HAVE MARGIN JANGAN TAMBAH*/
     .wrap{
       max-width:var(--max-width);
       margin: 48px auto;
       padding: 0 28px;
     }
 
-    /* header */
     header{
       display:flex;
       justify-content:space-between;
@@ -78,7 +77,6 @@
       box-shadow: none;
     }
 
-    /* hero */
     .hero{
       display:flex;
       gap:40px;
@@ -115,8 +113,6 @@
       font-weight:600;
       letter-spacing:0.2px;
     }
-
-    /* Page title */
     h1 {
       font-size: 36px;
       margin-bottom: 8px;
@@ -130,10 +126,17 @@
     }
 
     .input-box {
-      margin-bottom: 20px;
+      margin-bottom: 0;
       display: flex;
       flex-direction: column;
       align-items: flex-start;
+    }
+    .hint-text {
+      margin: 0 0 6px 0 !important;
+      margin-top: 6px;
+      margin-bottom: 4px; 
+      font-size: 15px;
+      color: #000;
     }
 
     label {
@@ -155,11 +158,12 @@
     }
 
     canvas {
-      border: 2px solid #555;
-      border-radius: 10px;
+     display: block;
+     border: 2px solid #555;
+     border-radius: 10px;
       background-color: #fff;
-      cursor: crosshair;
-      margin-bottom: 20px;
+     cursor: crosshair;
+     margin-bottom: 20px;
     }
 
     .controls {
@@ -189,11 +193,89 @@
       display: none;
     }
 
+    .reflection {
+      margin-top: 40px;
+    }
+
+    .reflection h2 {
+      font-size: 18px;
+      margin: 28px 0 6px;
+      font-weight: 700;
+    }
+
+    .question-text {
+      margin: 0 0 8px 0;
+      color: #000;
+      max-width: 600px;
+    }
+
+    textarea {
+      width: 100%;
+      max-width: 600px;
+      min-height: 110px;
+      padding: 10px;
+      font-size: 15px;
+      font-family: inherit;
+      border-radius: 8px;
+      border: 1px solid #ccc;
+      resize: vertical;
+    }
+
+    textarea:focus {
+      outline: none;
+      border-color: #000;
+    }
+
+    /* SLIDER question */
+    .slider-block {
+      margin-top: 36px;
+      max-width: 600px;
+    }
+
+    .slider-labels {
+      display: flex;
+      justify-content: space-between;
+      font-size: 13px;
+      color: var(--muted);
+      margin-bottom: 6px;
+    }
+
+    input[type="range"] {
+      width: 100%;
+      appearance: none;
+      height: 4px;
+      background: #ddd;
+      border-radius: 4px;
+      outline: none;
+    }
+
+    input[type="range"]::-webkit-slider-thumb {
+      appearance: none;
+      width: 16px;
+      height: 16px;
+      border-radius: 50%;
+      background: #000;
+      cursor: pointer;
+    }
+
+    input[type="range"]::-moz-range-thumb {
+      width: 16px;
+      height: 16px;
+      border-radius: 50%;
+      background: #000;
+      cursor: pointer;
+    }
+
+    .slider-value {
+      margin-top: 6px;
+      font-size: 14px;
+      color: #000;
+    }
+
     @media (max-width: 700px) {
       h1 { font-size: 28px; }
       nav { gap: 12px; }
     }
-    /* accessibility focus */
     a:focus, button:focus { outline: 3px solid rgba(0,0,0,0.08); outline-offset:3px; }
 
   </style>
@@ -204,33 +286,94 @@
       <a class="logo" href="home.html">WAYR</a>
       <nav aria-label="Main navigation">
         <a href="#">Resources</a>
-        <a href="#" style="text-decoration:underline;">Comparison Tool</a>
         <a class="btn-ghost" href="you.html">You!</a>
       </nav>
     </header>
 
     <main>
-      <h1>Create Your Profile</h1>
-      <p>Enter your name and draw a quick self-portrait below. Your data will be saved locally on your device.</p>
+      <h1>Who are you now?</h1>
+      <p>Look in the mirror; into your eyes, the window to your soul, and answer these questions. </p>
 
       <div class="input-box">
-        <label for="nameInput">Name:</label>
-        <input type="text" id="nameInput" placeholder="Enter your name" />
+        <label for="nameInput">You need a name. What's your name? </label>
+        <input type="text" id="nameInput" placeholder=""Hey,()!"" />
+        <p></p>
+        <p class="hint-text">Draw the lines of your face.</p>
       </div>
-
       <canvas id="drawBox" width="400" height="300"></canvas>
 
       <div class="controls">
         <button id="clearBtn">Clear</button>
-        <button id="saveBtn">Save</button>
+      </div>
+      <section class="reflection">
+      <h2>Identity</h2>
+      <p id="identity-question" class="question-text"></p>
+     <textarea id="identity-answer" placeholder="Write here..."></textarea>
+
+      <h2>Growth</h2>
+     <p id="growth-question" class="question-text"></p>
+     <textarea id="growth-answer" placeholder="Write here..."></textarea>
+
+     <h2>Honesty</h2>
+     <p id="honesty-question" class="question-text"></p>
+     <textarea id="honesty-answer" placeholder="Write here..."></textarea>
+    
+    <div class="slider-block">
+      <h2>Perspective</h2>
+
+      <p class="question-text">
+        Where are you now?
+      </p>
+
+      <div class="slider-labels">
+        <span>Clarity & Stability</span>
+        <span>Ambiguity & Change</span>
       </div>
 
-      <p id="savedMsg">✅ Profile saved successfully!</p>
+      <input
+        type="range"
+        id="perspective-slider"
+        min="0"
+        max="100"
+        value="50"
+      />
+      <div id="sliderValue" class="slider-value">
+      </div>
+    </div>
+    </section>
+
+      <p id="savedMsg">Got it!</p>
     </main>
   </div>
+  <div class="controls" style="max-width:920px; margin: 0 auto 48px auto;">
+    <button id="saveBtn">Save and Record in You archives</button>
+  </div>
+  
 
   <script>
     let db=new Localbase('db');
+    const identityQs=[
+  "What are some things people label you that you don’t really agree with, and why?",
+  "What values matter to you the most?",
+  "What’s something you’ve outgrown or let go of, even if it used to define you?"
+];
+    const growthQs=[
+  "How would you describe the person you want to become?",
+  "What’s a moment where you realized you’ve grown, changed, even a little?",
+  "What’s a choice you made that shaped you more than you expected?"
+];
+    const honestyQs=[
+  "What’s a fear you’ve learned how to live with?",
+  "When was the last time you surprised yourself?",
+  "What’s something you’re okay being bad at for now?",
+  "What’s something you’re allowing yourself to want?"
+];
+    function pickRandom(arr) {
+  return arr[Math.floor(Math.random() * arr.length)];
+}
+    const identityQuestion=pickRandom(identityQs);
+    const growthQuestion=pickRandom(growthQs);
+    const honestyQuestion=pickRandom(honestyQs);
 
     const canvas=document.getElementById('drawBox');
     const ctx=canvas.getContext('2d');
@@ -238,16 +381,33 @@
     const saveBtn=document.getElementById('saveBtn');
     const nameInput=document.getElementById('nameInput');
     const savedMsg=document.getElementById('savedMsg');
+    const slider = document.getElementById('perspective-slider')
+    const sliderValue = document.getElementById('sliderValue')
+
+    function updateSliderLabel(val) {
+      if (val < 35) return 'Leaning toward clarity & stability'
+      if (val > 65) return 'Comfortable with ambiguity & change'
+      return 'Middle ground'
+    }
+
+slider.addEventListener('input', () => {
+      sliderValue.textContent = updateSliderLabel(slider.value)
+    })
+
+    document.getElementById("identity-question").textContent=identityQuestion;
+    document.getElementById("growth-question").textContent=growthQuestion;
+    document.getElementById("honesty-question").textContent=honestyQuestion;
+
 
     let drawing=false;
 
-    canvas.addEventListener('mousedown', (e) => {
+    canvas.addEventListener('mousedown', (e)=> {
       drawing=true;
       ctx.beginPath();
       ctx.moveTo(e.offsetX, e.offsetY);
     });
 
-    canvas.addEventListener('mousemove', (e) => {
+    canvas.addEventListener('mousemove', (e)=> {
       if (drawing) {
         ctx.lineTo(e.offsetX, e.offsetY);
         ctx.strokeStyle='#000';
@@ -265,25 +425,56 @@
     });
 
     saveBtn.addEventListener('click', async () => {
+      const perspectiveValue = slider.value;
+      const identityAnswer = document.getElementById('identity-answer').value;
+      const growthAnswer = document.getElementById('growth-answer').value;
+      const honestyAnswer = document.getElementById('honesty-answer').value;
       const name=nameInput.value.trim();
       if (!name) {
         alert('Please enter your name.');
         return;
       }
-
       const drawingData=canvas.toDataURL();
 
       await db.collection('users').add({
         id: Date.now(),
         name: name,
-        drawing: drawingData
+        drawing: drawingData,
+        reflections: {
+          identity: {
+            question: identityQuestion,
+            answer: identityAnswer
+          },
+          growth: {
+            question: growthQuestion,
+            answer: growthAnswer
+          },
+          honesty: {
+            question: honestyQuestion,
+            answer: honestyAnswer
+          }
+        },
+        perspective: {
+          question: 'Where are you?',
+          value: perspectiveValue
+        }
       });
 
+      nameInput.value = '';
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      document.getElementById('identity-answer').value = '';
+      document.getElementById('growth-answer').value = '';
+      document.getElementById('honesty-answer').value = '';
+
+
       savedMsg.style.display='block';
-      setTimeout(() => savedMsg.style.display = 'none', 3000);
+      setTimeout(()=> savedMsg.style.display = 'none', 3000);
 
       nameInput.value='';
       ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+      slider.value = 50;
+      sliderValue.textContent = 'Middle ground';
     });
   </script>
 </body>
