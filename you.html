@@ -85,14 +85,15 @@
   scroll-behavior: smooth;
   position: relative;
   scrollbar-width: none; /* hide scrollbar (Firefox) */
-}
+  z-index: 10;
+      }
 
-/* hide scrollbar (WebKit) */
+    /* hide scrollbar (WebKit) */
 .user-list::-webkit-scrollbar {
   display: none;
-}
+    }
 
-/* fade edges */
+    /* fade edges */
 .user-list::before,
 .user-list::after {
   content: "";
@@ -102,19 +103,19 @@
   height: 100%;
   pointer-events: none;
   z-index: 3;
-}
+    }
 
 .user-list::before {
   left: 0;
   background: linear-gradient(to right, white 0%, transparent 100%);
-}
+    }
 
 .user-list::after {
   right: 0;
   background: linear-gradient(to left, white 0%, transparent 100%);
-}
+    }
 
-/* user cards */
+    /* archive's cards */
 .user-card {
   flex: 0 0 auto; /* don’t shrink, keep fixed width */
   width: 220px;
@@ -126,33 +127,35 @@
   transition: all 0.25s ease;
   cursor: pointer;
   position: relative;
-  z-index: 1;
-}
+  z-index: 10;
+
+
+    }
 
 .user-card:hover {
   transform: translateY(-10px);
   box-shadow: 0 8px 18px rgba(0,0,0,0.12);
   z-index: 2;
-}
-
-.user-card img {
-  width: 100%;
-  height: 200px;
-  object-fit: contain;
-  border-radius: 12px;
-  background-color: #f9f9f9;
-  margin-bottom: 12px;
-}
-
-    .user-card h3 {
-      margin: 0;
-      font-size: 16px;
-      font-weight: 600;
     }
 
-    @media (max-width: 700px) {
-      .user-card {
-        width: 160px;
+.user-card img {
+   width: 100%;
+   height: 200px;
+   object-fit: contain;
+  border-radius: 12px;
+  background-color: #f9f9f9;
+   margin-bottom: 12px;
+    }
+
+.user-card h3 {
+   margin: 0;
+   font-size: 16px;
+   font-weight: 600;
+    }
+
+@media (max-width: 700px) {
+.user-card {
+    width: 160px;
       }
     }
 
@@ -160,6 +163,205 @@
       outline: 3px solid rgba(0,0,0,0.08);
       outline-offset: 3px;
     }
+    /* expanded profile */
+    .expanded-profile {
+      max-width: 520px;
+      margin: 40px auto 0;
+      padding: 24px;
+      border-radius: 20px;
+      background: white;
+      box-shadow: 0 12px 30px rgba(0,0,0,0.15);
+      transform: translateY(40px) scale(0.95);
+      opacity: 0;
+      transition: all 0.4s ease;
+    }
+
+    .expanded-profile.show {
+      transform: translateY(0) scale(1);
+      opacity: 1;
+    }
+
+    .expanded-profile img {
+      width: 100%;
+      max-height: 320px;
+      object-fit: contain;
+      border-radius: 16px;
+      background: #f5f5f5;
+      margin-bottom: 16px;
+    }
+
+    .expanded-profile h2 {
+      margin: 0 0 12px;
+      text-align: center;
+    }
+
+    .reflection {
+      margin-top: 16px;
+    }
+
+    .reflection h4 {
+      margin: 12px 0 6px;
+      font-size: 14px;
+      color: #444;
+    }
+
+    .reflection p {
+      margin: 0;
+      font-size: 14px;
+      line-height: 1.5;
+    }
+
+    .hidden {
+      display: none;
+    }
+
+    /* slider displayyyyyyhhh 4 spectrum tingz */
+    .perspective-block {
+      margin-top: 20px;
+    }
+
+    .perspective-label {
+      font-size: 13px;
+      color: #444;
+      margin-bottom: 6px;
+    }
+
+    .perspective-track {
+      position: relative;
+      height: 4px;
+      background: #ddd;
+      border-radius: 4px;
+    }
+
+    .perspective-dot {
+      position: absolute;
+      top: 50%;
+      width: 14px;
+      height: 14px;
+      background: #000;
+      border-radius: 50%;
+      transform: translate(-50%, -50%);
+    }
+
+    .compare-btn {
+      display: block;
+      margin: 40px auto 0;
+      padding: 14px 22px;
+      background: #000;
+      color: #fff;
+      border: none;
+      border-radius: 14px;
+      cursor: pointer;
+      font-size: 15px;
+    }
+    .compare-modal {
+      position: relative;
+      inset: auto;
+      display: block;
+      z-index: 20;
+
+      background: none;
+      backdrop-filter: none;
+
+      opacity: 0;
+      pointer-events: none;
+
+      transition:
+        opacity 0.4s ease,
+        backdrop-filter 0.4s ease,
+        background 0.4s ease;
+    }
+    .compare-modal:not(.hidden) {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+
+    .compare-modal.hidden {
+       opacity: 0;
+      pointer-events: none;
+  }
+
+    .compare-box {
+      background: white;
+      padding: 24px;
+      margin: 40px auto 0;
+      border-radius: 20px;
+      width: 520px;
+      max-width: 90%;
+      pointer-events: auto;
+      margin-top: 80px;
+      transform: translateY(40px) scale(0.95);
+      opacity: 0;
+      transition: transform 0.35s ease, opacity 0.35s ease;
+    }
+
+    .compare-modal:not(.hidden) .compare-box {
+        transform: translateY(0) scale(1);
+        opacity: 1;
+}
+    .compare-slots {
+      display: flex;
+      gap: 16px;
+      margin: 20px 0;
+    }
+
+    .slot {
+      flex: 1;
+      min-height: 180px;
+      border: 2px dashed #ccc;
+      border-radius: 14px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      font-size: 13px;
+      color: #777;
+      gap: 8px;
+      padding: 10px;
+      }
+
+
+
+    .slot img {
+      width: 100%;
+      max-height: 120px;
+      object-fit: contain;
+      border-radius: 10px;
+      background: #f6f6f6;
+    }
+
+
+    #analyseBtn {
+      width: 100%;
+      padding: 12px;
+      border-radius: 10px;
+      background: #000;
+      color: white;
+      border: none;
+      cursor: pointer;
+    }
+
+    #analysisResult {
+      margin-top: 18px;
+      font-size: 14px;
+    }
+    .blur-layer {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.25);
+      backdrop-filter: blur(6px);
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.4s ease;
+      z-index: 5;
+    }
+
+    .blur-layer.show {
+      opacity: 1;
+    }
+
+
   </style>
 </head>
 <body>
@@ -168,45 +370,261 @@
       <a class="logo" href="home.html">WAYR</a>
       <nav>
         <a href="resources.html">Resources</a>
-        <a href="compare.html">Comparison Tool</a>
         <a class="btn-ghost" aria-label="You">You!</a>
       </nav>
     </header>
 
     <main>
-      <h1>Your Saved Profiles</h1>
+      <h1>You Archives</h1>
+      <p style="color:#666; margin-top:-6px;">
+        Click on a card to see you then.
+      </p>
       <div id="userList" class="user-list"></div>
+      <div id="expandedProfile" class="expanded-profile hidden"></div>
+      <button id="compareBtn" class="compare-btn">
+        How have you changed?
+        <div style="font-size:12px; opacity:.8;">
+          compare 2 cards for similarity analysis.
+        </div>
+      </button>
+      <div id="compareModal" class="compare-modal hidden">
+        <div class="compare-box">
+          <h2>Compare Selves</h2>
+
+          <div class="compare-slots">
+            <div class="slot" id="slotA">Click a card</div>
+            <div class="slot" id="slotB">Click another card</div>
+          </div>
+
+          <button id="analyseBtn" disabled>Analyse!</button>
+          <div id="analysisResult"></div>
+        </div>
+      </div>
+
     </main>
   </div>
 
-  <script>
-    let db=new Localbase('db')
+<script>
+  let db = new Localbase('db')
+  const expandedProfile = document.getElementById('expandedProfile')
+  expandedProfile.addEventListener('click', e => {
+    e.stopPropagation()
+})
 
-    db.collection('users').orderBy('id', 'desc').get().then(users => {
-     const container=document.getElementById('userList')
+  const container = document.getElementById('userList')
+ 
+  let selectedA = null
+  let selectedB = null
 
-    if (users.length===0) {
-      container.innerHTML="<p style='color:#666;'>No saved profiles yet. Create one first!</p>"
-     return
-     }
 
-     users.forEach(user => {
-       const card=document.createElement('div')
-      card.className='user-card'
+ document.getElementById('compareBtn').addEventListener('click', () => {
+  selectedA = null
+  selectedB = null
 
-       const img=document.createElement('img')
-       img.src=user.drawing || ''
-      img.alt=user.name + "'s drawing"
+  document.getElementById('slotA').innerHTML = 'Click a card'
+  document.getElementById('slotB').innerHTML = 'Click another card'
+  document.getElementById('analyseBtn').disabled = true
+  document.getElementById('analysisResult').innerHTML = ''
 
-      const name=document.createElement('h3')
-      name.textContent=user.name
+  document.getElementById('blurLayer').classList.add('show')
+  document.getElementById('compareModal').classList.remove('hidden')
+})
+  document.getElementById('compareModal').addEventListener('click', e => {
+  if (e.target.id === 'compareModal') {
+    e.target.classList.add('hidden')
+    document.getElementById('blurLayer').classList.remove('show')
+  }
+})
+    document.getElementById('analyseBtn').addEventListener('click', () => {
+      const textA = Object.values(selectedA.reflections)
+        .map(r => r.answer).join(' ')
+      const textB = Object.values(selectedB.reflections)
+        .map(r => r.answer).join(' ')
+
+      const textScore = jaccardSimilarity(textA, textB)
+
+      drawingSimilarity(selectedA.drawing, selectedB.drawing)
+        .then(drawingScore => {
+          document.getElementById('analysisResult').innerHTML = `
+            <p><strong>Reflection similarity:</strong> ${(textScore * 100).toFixed(1)}%</p>
+            <p><strong>Visual similarity:</strong> ${(drawingScore * 100).toFixed(1)}%</p>
+            <p style="margin-top:10px; color:#666;">
+              You’ve changed, but some patterns remain.
+            </p>
+          `
+        })
+    })
+
+      document.getElementById('compareModal').addEventListener('click', e => {
+       if (e.target.id === 'compareModal') {
+          e.target.classList.add('hidden')
+        }
+      })
+  db.collection('users').orderBy('id', 'desc').get().then(users => {
+
+    if (users.length === 0) {
+      container.innerHTML = "<p style='color:#666;'>No saved profiles yet. Create one first!</p>"
+      return
+    }
+
+    users.forEach(user => {
+      const card = document.createElement('div')
+      card.className = 'user-card'
+
+      const img = document.createElement('img')
+      img.src = user.drawing || ''
+      img.alt = user.name + "'s drawing"
+
+      const name = document.createElement('h3')
+      name.textContent = user.name
 
       card.appendChild(img)
-       card.appendChild(name)
-    container.appendChild(card)
-  });
-});
+      card.appendChild(name)
+      container.appendChild(card)
 
-  </script>
+      card.addEventListener('click', (e) => {
+        e.stopPropagation() // IMPORTANT
+        if (!document.getElementById('compareModal').classList.contains('hidden')) {
+          if (!selectedA) {
+            selectedA = user
+            document.getElementById('slotA').innerHTML =
+              `
+                <img src="${user.drawing}">
+                <div style="font-size:12px; color:#555;">${user.name}</div>
+`
+
+          } else if (!selectedB && user !== selectedA) {
+            selectedB = user
+            document.getElementById('slotB').innerHTML =
+              `
+                <img src="${user.drawing}">
+                <div style="font-size:12px; color:#555;">${user.name}</div>
+`
+          }
+
+          if (selectedA && selectedB) {
+            document.getElementById('analyseBtn').disabled = false
+          }
+
+          return
+        }
+
+        expandedProfile.classList.remove('hidden')
+
+        const perspectiveValue = user.perspective?.value ?? 50
+
+        expandedProfile.innerHTML = `
+          <img src="${user.drawing || ''}">
+          <h2>${user.name}</h2>
+
+          <div class="reflection">
+            <h4>${user.reflections?.identity?.question || 'Identity'}</h4>
+            <p>${user.reflections?.identity?.answer || '-'}</p>
+
+            <h4>${user.reflections?.growth?.question || 'Growth'}</h4>
+            <p>${user.reflections?.growth?.answer || '-'}</p>
+
+            <h4>${user.reflections?.honesty?.question || 'Honesty'}</h4>
+            <p>${user.reflections?.honesty?.answer || '-'}</p>
+          </div>
+
+          <div class="perspective-block">
+            <div class="perspective-label">
+              Prefers clarity, stability ←→ Comfortable with ambiguity, change
+            </div>
+
+            <div class="perspective-track">
+              <div
+                class="perspective-dot"
+                style="left: ${perspectiveValue}%;"
+              ></div>
+            </div>
+          </div>
+        `
+
+        expandedProfile.classList.remove('show')
+        void expandedProfile.offsetWidth
+        expandedProfile.classList.add('show')
+
+        expandedProfile.scrollIntoView({ behavior: 'smooth', block: 'center' })
+      })
+    })
+  })
+  document.addEventListener('click', (e) => {
+    if (!expandedProfile.contains(e.target) && !e.target.closest('.user-card')) {
+      expandedProfile.classList.add('hidden')
+      expandedProfile.classList.remove('show')
+    }
+  })
+
+  function jaccardSimilarity(textA, textB) {
+    if (!textA || !textB) return 0
+  const setA = new Set(textA.toLowerCase().split(/\W+/))
+  const setB = new Set(textB.toLowerCase().split(/\W+/))
+
+  const intersection = [...setA].filter(x => setB.has(x))
+  const union = new Set([...setA, ...setB])
+  return intersection.length / union.size
+}
+
+function drawingSimilarity(imgSrcA, imgSrcB) {
+  return new Promise(resolve => {
+    const size = 200
+
+    const canvasA = document.createElement('canvas')
+    const canvasB = document.createElement('canvas')
+    canvasA.width = canvasB.width = size
+    canvasA.height = canvasB.height = size
+
+    const ctxA = canvasA.getContext('2d')
+    const ctxB = canvasB.getContext('2d')
+
+    const imgA = new Image()
+    const imgB = new Image()
+    imgA.crossOrigin = 'anonymous'
+    imgB.crossOrigin = 'anonymous'
+
+    imgA.onload = () => {
+      ctxA.fillStyle = 'white'
+      ctxA.fillRect(0, 0, size, size)
+      ctxA.drawImage(imgA, 0, 0, size, size)
+
+      imgB.onload = () => {
+        ctxB.fillStyle = 'white'
+        ctxB.fillRect(0, 0, size, size)
+        ctxB.drawImage(imgB, 0, 0, size, size)
+
+        const dataA = ctxA.getImageData(0, 0, size, size).data
+        const dataB = ctxB.getImageData(0, 0, size, size).data
+
+        let diff = 0
+        let count = 0
+
+        for (let i = 0; i < dataA.length; i += 4) {
+          // grayscale
+          const grayA = (dataA[i] + dataA[i+1] + dataA[i+2]) / 3
+          const grayB = (dataB[i] + dataB[i+1] + dataB[i+2]) / 3
+
+          diff += Math.abs(grayA - grayB)
+          count++
+        }
+
+        // normalize to 0–1 similarity
+        const maxDiff = 255 * count
+        const similarity = 1 - diff / maxDiff
+
+        resolve(Math.max(0, similarity))
+      }
+
+      imgB.src = imgSrcB
+    }
+
+    imgA.src = imgSrcA
+  })
+}
+
+
+</script>
+<div id="blurLayer" class="blur-layer hidden"></div>
 </body>
 </html>
