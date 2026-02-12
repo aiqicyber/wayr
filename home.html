@@ -78,7 +78,7 @@
       gap:40px;
       align-items:flex-start;
       margin-top:18px;
-      margin-bottom:56px;
+      margin-bottom: 12px;
     }
 
     .hero-left{
@@ -137,6 +137,10 @@
       max-width:900px;
     }
 
+    section:last-of-type .desc {
+      margin-bottom: 48px;
+    }
+
     .banner-tall{
       height:84px;
       border-radius:8px;
@@ -161,6 +165,49 @@
         padding: 0 20px;
       }
     }
+      .fade-rest {
+        opacity: 0;
+      }
+
+      main {
+        padding-bottom: 48px;
+      }
+
+
+
+    /* Base fade animation */
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(6px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+    /* Line 1: "Who are you," */
+    .line-1 {
+      display: inline-block;
+      opacity: 0;
+      animation: fadeIn 1s ease forwards;
+      animation-delay: 0.6s;
+    }
+
+    /* Line 2: "really?" */
+    .line-2 {
+      display: inline-block;
+      opacity: 0;
+      animation: fadeIn 1s ease forwards;
+      animation-delay: 1.6s;
+    }
+
+    /* Everything else */
+    .fade-rest {
+      animation: fadeIn 1s ease forwards;
+      animation-delay: 2.6s;
+    }
+
 
     a:focus, button:focus { outline: 3px solid rgba(0,0,0,0.08); outline-offset:3px; }
   </style>
@@ -175,26 +222,25 @@
         <a class="btn-ghost" href="you.html" aria-label="You">You!</a>
       </nav>
     </header>
-    <main>
       <div class="hero" role="region" aria-labelledby="hero-heading">
         <div class="hero-left">
-          <h1 id="hero-heading">Who are you,<br/>really?</h1>
-          <p class="lead">WAYR is a safe space for you to explore your identity, reflect on your growth, and discover what makes you unique. This platform is designed to help you reflect on your personality, values, and interests, and to track how you change and grow over time. Remember, there are no right or wrong answers here. Just your story.
-          </p>
-
-          <a class="create-btn" href="create.html" role="button">Create!</a>
-        </div>
-
-        
-        <div style="width:160px;"></div>
+          <h1 id="hero-heading" class="hero-title">
+         <span class="line line-1">Who are you,</span><br/>
+         <span class="line line-2">really?</span>
+          </h1>
+          </div>
       </div>
-
+    <main class="fade-rest">
+      <p class="lead">WAYR is a website designed by a teenager 4 a teenager. to help those who are struggling to see who they are, to help get it down!
+        </p>
+        <a class="create-btn" href="create.html" role="button">Create!</a>
+        <div style="width:160px;"></div>
       <section aria-labelledby="what-title">
         <h2 id="what-title" class="section-title">What is this dang website?</h2>
 
         <div class="banner" aria-hidden="true"></div>
 
-        <p class="desc">This website lets you create your own personal psychology profile by answering guided questions and reflections. You can save your profile on your own device, edit it over time, and export it as a file. Later, you can re-import older profiles to compare them with your current one and see how your thoughts, moods, or perspectives may have changed. The site also provides space for journaling and guided reflections, as well as links to trusted mental health resources for extra support.
+        <p class="desc">This website lets you create your own personal psychology profile card by answering the guided questions and reflections! You can use our comparison tool to compare older profiles with your current one and see how your thoughts, moods, or perspectives may have changed. The site provides space for journaling and guided reflections, as well as links to trusted mental health resources for extra super support.
         </p>
       </section>
 
@@ -203,8 +249,9 @@
 
         <div class="banner-tall" aria-hidden="true"></div>
 
-        <p class="desc">Your data is never sent to any server or stored online. Everything you write stays inside your browser using secure local storage (IndexedDB). If you want to save your progress, you can export your profile as a file and keep it on your own device. This means only you decide where your information goes and who has access to it. The website does not collect, share, or track any personal details; your reflections remain completely private.
+        <p class="desc">Your data is never sent to any server or stored online!!!!! Everything you write stays inside your browser using secure local storage (IndexedDB). The website does not collect, share, or track any personal details; your reflections remain completely private, locked by a master password YOU set.
         </p>
+
       </section>
     </main>
 
