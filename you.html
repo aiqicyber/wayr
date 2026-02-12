@@ -73,51 +73,44 @@
       font-size: 32px;
       margin-bottom: 18px;
     }
-
-    /* horizontal scroll layout */
 .user-list {
   display: flex;
   flex-wrap: nowrap;
   gap: 20px;
-  padding: 20px 60px; /* space for fades */
+  padding: 20px 60px; 
   overflow-x: auto;
   overflow-y: hidden;
   scroll-behavior: smooth;
   position: relative;
-  scrollbar-width: none; /* hide scrollbar (Firefox) */
+  scrollbar-width: none; 
   z-index: 10;
       }
 
-    /* hide scrollbar (WebKit) */
 .user-list::-webkit-scrollbar {
   display: none;
-    }
-
-    /* fade edges */
-.user-list::before,
-.user-list::after {
-  content: "";
-  position: absolute;
-  top: 0;
-  width: 60px;
-  height: 100%;
-  pointer-events: none;
-  z-index: 3;
     }
 
 .user-list::before {
   left: 0;
   background: linear-gradient(to right, white 0%, transparent 100%);
-    }
+  border-top-left-radius: 24px;
+  border-bottom-left-radius: 24px;
+}
 
 .user-list::after {
   right: 0;
   background: linear-gradient(to left, white 0%, transparent 100%);
-    }
+  border-top-right-radius: 24px;
+  border-bottom-right-radius: 24px;
+}
 
-    /* archive's cards */
+.user-list::before,
+.user-list::after {
+  filter: blur(0.2px);
+}
+
 .user-card {
-  flex: 0 0 auto; /* don’t shrink, keep fixed width */
+  flex: 0 0 auto; 
   width: 220px;
   background: white;
   border-radius: 16px;
@@ -163,7 +156,6 @@
       outline: 3px solid rgba(0,0,0,0.08);
       outline-offset: 3px;
     }
-    /* expanded profile */
     .expanded-profile {
       max-width: 520px;
       margin: 40px auto 0;
@@ -374,6 +366,14 @@
       </nav>
     </header>
 
+    <div id="lockScreen">
+  <h2>🔒 Enter password</h2>
+  <input id="passwordInput" type="password" placeholder="Password">
+  <button id="unlockBtn">Unlock</button>
+  <p id="lockError" style="color:red; display:none;">Wrong password</p>
+</div>
+
+<div id="appContent" class="hidden">
     <main>
       <h1>You Archives</h1>
       <p style="color:#666; margin-top:-6px;">
@@ -403,8 +403,10 @@
 
     </main>
   </div>
-
+</div>
+<script src="https://cdn.jsdelivr.net/npm/crypto-js@4.1.1/crypto-js.min.js"></script>
 <script>
+  let archivePassword = localStorage.getItem('archivePassword')
   let db = new Localbase('db')
   const expandedProfile = document.getElementById('expandedProfile')
   expandedProfile.addEventListener('click', e => {
@@ -455,107 +457,167 @@
         })
     })
 
-      document.getElementById('compareModal').addEventListener('click', e => {
-       if (e.target.id === 'compareModal') {
-          e.target.classList.add('hidden')
+  let masterPassword = null
+
+  const lockScreen = document.getElementById('lockScreen')
+  const appContent = document.getElementById('appContent')
+  const unlockBtn = document.getElementById('unlockBtn')
+  const passwordInput = document.getElementById('passwordInput')
+  const lockError = document.getElementById('lockError')
+  lockScreen.style.display = 'block'
+  appContent.classList.add('hidden')
+
+  unlockBtn.addEventListener('click', tryUnlock)
+  passwordInput.addEventListener('keydown', e => {
+    if (e.key === 'Enter') tryUnlock()
+  })
+
+  function tryUnlock() {
+    const pw = passwordInput.value.trim()
+    if (!pw) return
+
+    db.collection('users').limit(1).get().then(users => {
+      if (users.length === 0) {
+        unlockSuccess(pw)
+        return
+      }
+
+      try {
+        decryptData(users[0].payload, pw)
+        unlockSuccess(pw)
+      } catch {
+        lockError.style.display = 'block'
+      }
+    })
+  }
+
+  function unlockSuccess(pw) {
+    masterPassword = pw
+    lockScreen.style.display = 'none'
+    appContent.classList.remove('hidden')
+    lockError.style.display = 'none'
+
+    loadAndRenderUsers()
+  }
+  function loadAndRenderUsers() {
+    db.collection('users').orderBy('id', 'desc').get().then(users => {
+      if (users.length === 0) {
+        container.innerHTML = "<p style='color:#666;'>No saved profiles yet. Create one first!</p>"
+        return
+      }
+
+      users.forEach(user => {
+
+        let decrypted
+        try {
+          decrypted = decryptData(user.payload, masterPassword)
+        } catch {
+          alert('Wrong password')
+          throw new Error('Bad password')
         }
-      })
-  db.collection('users').orderBy('id', 'desc').get().then(users => {
 
-    if (users.length === 0) {
-      container.innerHTML = "<p style='color:#666;'>No saved profiles yet. Create one first!</p>"
-      return
-    }
+        const card = document.createElement('div')
+        card.className = 'user-card'
 
-    users.forEach(user => {
-      const card = document.createElement('div')
-      card.className = 'user-card'
+        const img = document.createElement('img')
+        img.src = decrypted.drawing || ''
+        img.alt = decrypted.name + "'s drawing"
 
-      const img = document.createElement('img')
-      img.src = user.drawing || ''
-      img.alt = user.name + "'s drawing"
+        const name = document.createElement('h3')
+        name.textContent = decrypted.name
 
-      const name = document.createElement('h3')
-      name.textContent = user.name
+        card.appendChild(img)
+        card.appendChild(name)
+        container.appendChild(card)
 
-      card.appendChild(img)
-      card.appendChild(name)
-      container.appendChild(card)
+        card.addEventListener('click', (e) => {
+          e.stopPropagation() // IMPORTANT
+          if (!document.getElementById('compareModal').classList.contains('hidden')) {
+            if (!selectedA) {
+              selectedA = decrypted
+              document.getElementById('slotA').innerHTML =
+                `
+                  <img src="${decrypted.drawing}">
+                  <div style="font-size:12px; color:#555;">${decrypted.name}</div>
+  `
 
-      card.addEventListener('click', (e) => {
-        e.stopPropagation() // IMPORTANT
-        if (!document.getElementById('compareModal').classList.contains('hidden')) {
-          if (!selectedA) {
-            selectedA = user
-            document.getElementById('slotA').innerHTML =
-              `
-                <img src="${user.drawing}">
-                <div style="font-size:12px; color:#555;">${user.name}</div>
-`
+            } else if (!selectedB && user !== selectedA) {
+              selectedB = decrypted
+              document.getElementById('slotB').innerHTML =
+                `
+                  <img src="${decrypted.drawing}">
+                  <div style="font-size:12px; color:#555;">${decrypted.name}</div>
+  `
+            }
 
-          } else if (!selectedB && user !== selectedA) {
-            selectedB = user
-            document.getElementById('slotB').innerHTML =
-              `
-                <img src="${user.drawing}">
-                <div style="font-size:12px; color:#555;">${user.name}</div>
-`
+            if (selectedA && selectedB) {
+              document.getElementById('analyseBtn').disabled = false
+            }
+
+            return
           }
 
-          if (selectedA && selectedB) {
-            document.getElementById('analyseBtn').disabled = false
-          }
+          expandedProfile.classList.remove('hidden')
 
-          return
-        }
+          const perspectiveValue = decrypted.perspective?.value ?? 50
 
-        expandedProfile.classList.remove('hidden')
+          expandedProfile.innerHTML = `
+            <img src="${decrypted.drawing || ''}">
+            <h2>${decrypted.name}</h2>
 
-        const perspectiveValue = user.perspective?.value ?? 50
+            <div class="reflection">
+              <h4>${decrypted.reflections?.identity?.question || 'Identity'}</h4>
+              <p>${decrypted.reflections?.identity?.answer || '-'}</p>
 
-        expandedProfile.innerHTML = `
-          <img src="${user.drawing || ''}">
-          <h2>${user.name}</h2>
+              <h4>${decrypted.reflections?.growth?.question || 'Growth'}</h4>
+              <p>${decrypted.reflections?.growth?.answer || '-'}</p>
 
-          <div class="reflection">
-            <h4>${user.reflections?.identity?.question || 'Identity'}</h4>
-            <p>${user.reflections?.identity?.answer || '-'}</p>
-
-            <h4>${user.reflections?.growth?.question || 'Growth'}</h4>
-            <p>${user.reflections?.growth?.answer || '-'}</p>
-
-            <h4>${user.reflections?.honesty?.question || 'Honesty'}</h4>
-            <p>${user.reflections?.honesty?.answer || '-'}</p>
-          </div>
-
-          <div class="perspective-block">
-            <div class="perspective-label">
-              Prefers clarity, stability ←→ Comfortable with ambiguity, change
+              <h4>${decrypted.reflections?.honesty?.question || 'Honesty'}</h4>
+              <p>${decrypted.reflections?.honesty?.answer || '-'}</p>
             </div>
 
-            <div class="perspective-track">
-              <div
-                class="perspective-dot"
-                style="left: ${perspectiveValue}%;"
-              ></div>
+            <div class="perspective-block">
+              <div class="perspective-label">
+                Prefers clarity, stability ←→ Comfortable with ambiguity, change
+              </div>
+
+              <div class="perspective-track">
+                <div
+                  class="perspective-dot"
+                  style="left: ${perspectiveValue}%;"
+                ></div>
+              </div>
             </div>
-          </div>
-        `
+          `
 
-        expandedProfile.classList.remove('show')
-        void expandedProfile.offsetWidth
-        expandedProfile.classList.add('show')
+          expandedProfile.classList.remove('show')
+          void expandedProfile.offsetWidth
+          expandedProfile.classList.add('show')
 
-        expandedProfile.scrollIntoView({ behavior: 'smooth', block: 'center' })
+          expandedProfile.scrollIntoView({ behavior: 'smooth', block: 'center' })
+        })
       })
     })
-  })
+  }
   document.addEventListener('click', (e) => {
     if (!expandedProfile.contains(e.target) && !e.target.closest('.user-card')) {
       expandedProfile.classList.add('hidden')
       expandedProfile.classList.remove('show')
     }
   })
+  function encryptData(data, password) {
+    return CryptoJS.AES.encrypt(
+      JSON.stringify(data),
+      password
+    ).toString()
+  }
+
+  function decryptData(cipherText, password) {
+    const bytes = CryptoJS.AES.decrypt(cipherText, password)
+    const decrypted = bytes.toString(CryptoJS.enc.Utf8)
+    if (!decrypted) throw new Error('Wrong password')
+    return JSON.parse(decrypted)
+  }
 
   function jaccardSimilarity(textA, textB) {
     if (!textA || !textB) return 0
@@ -566,6 +628,7 @@
   const union = new Set([...setA, ...setB])
   return intersection.length / union.size
 }
+
 
 function drawingSimilarity(imgSrcA, imgSrcB) {
   return new Promise(resolve => {
@@ -601,7 +664,6 @@ function drawingSimilarity(imgSrcA, imgSrcB) {
         let count = 0
 
         for (let i = 0; i < dataA.length; i += 4) {
-          // grayscale
           const grayA = (dataA[i] + dataA[i+1] + dataA[i+2]) / 3
           const grayB = (dataB[i] + dataB[i+1] + dataB[i+2]) / 3
 
@@ -609,22 +671,28 @@ function drawingSimilarity(imgSrcA, imgSrcB) {
           count++
         }
 
-        // normalize to 0–1 similarity
         const maxDiff = 255 * count
         const similarity = 1 - diff / maxDiff
 
         resolve(Math.max(0, similarity))
       }
-
       imgB.src = imgSrcB
     }
-
     imgA.src = imgSrcA
   })
 }
 
 
+document.addEventListener('contextmenu', e => {
+  e.preventDefault()
+})
+
+window.addEventListener('beforeunload', () => {
+  masterPassword = null
+})
+
+
 </script>
-<div id="blurLayer" class="blur-layer hidden"></div>
+<div id="blurLayer" class="blur-layer"></div>
 </body>
 </html>
