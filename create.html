@@ -187,11 +187,14 @@
     }
 
     #savedMsg {
-      margin-top: 10px;
-      color: green;
-      font-weight: 600;
-      display: none;
-    }
+    margin-top: 14px;
+    color: #1a7f37;
+    font-weight: 600;
+    display: none;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+  }
+
 
     .reflection {
       margin-top: 40px;
@@ -349,8 +352,23 @@
     <button id="saveBtn">Save and Record in You archives</button>
   </div>
   
+ <script src="https://cdn.jsdelivr.net/npm/crypto-js@4.1.1/crypto-js.min.js"></script>
+
+  
 
   <script>
+  let archivePassword = localStorage.getItem('archivePassword')
+
+  if (!archivePassword) {
+    const pw = prompt('Create a password to lock your archive:')
+    if (!pw) {
+      alert('Password required to continue.')
+      throw new Error('No password set')
+    }
+    archivePassword = pw
+    localStorage.setItem('archivePassword', pw)
+  }
+
     let db=new Localbase('db');
     const identityQs=[
   "What are some things people label you that you don’t really agree with, and why?",
@@ -429,36 +447,56 @@ slider.addEventListener('input', () => {
       const identityAnswer = document.getElementById('identity-answer').value;
       const growthAnswer = document.getElementById('growth-answer').value;
       const honestyAnswer = document.getElementById('honesty-answer').value;
-      const name=nameInput.value.trim();
+      const name = nameInput.value.trim();
+
       if (!name) {
         alert('Please enter your name.');
         return;
       }
-      const drawingData=canvas.toDataURL();
+
+      const reflections = {
+        identity: { question: identityQuestion, answer: identityAnswer },
+        growth: { question: growthQuestion, answer: growthAnswer },
+        honesty: { question: honestyQuestion, answer: honestyAnswer }
+      };
+
+      const drawingData = canvas.toDataURL();
+
+      const encryptedPayload = encryptData({
+        id: Date.now(),
+        name,
+        drawing: drawingData,
+        reflections,
+        perspective: { value: perspectiveValue }
+      }, archivePassword);
 
       await db.collection('users').add({
         id: Date.now(),
-        name: name,
-        drawing: drawingData,
-        reflections: {
-          identity: {
-            question: identityQuestion,
-            answer: identityAnswer
-          },
-          growth: {
-            question: growthQuestion,
-            answer: growthAnswer
-          },
-          honesty: {
-            question: honestyQuestion,
-            answer: honestyAnswer
-          }
-        },
-        perspective: {
-          question: 'Where are you?',
-          value: perspectiveValue
-        }
+        payload: encryptedPayload
       });
+
+      nameInput.value = '';
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      document.getElementById('identity-answer').value = '';
+      document.getElementById('growth-answer').value = '';
+      document.getElementById('honesty-answer').value = '';
+
+      slider.value = 50;
+      sliderValue.textContent = 'Middle ground';
+
+      savedMsg.style.display = 'block';
+      requestAnimationFrame(() => {
+        savedMsg.style.opacity = '1';
+      });
+
+      setTimeout(() => {
+        savedMsg.style.opacity = '0';
+        setTimeout(() => {
+          savedMsg.style.display = 'none';
+        }, 300);
+      }, 2000);
+    });
+
 
       nameInput.value = '';
       ctx.clearRect(0, 0, canvas.width, canvas.height);
@@ -475,7 +513,14 @@ slider.addEventListener('input', () => {
 
       slider.value = 50;
       sliderValue.textContent = 'Middle ground';
-    });
+
+
+    function encryptData(data, password) {
+    return CryptoJS.AES.encrypt(
+      JSON.stringify(data),
+      password
+    ).toString()
+  }
   </script>
 </body>
 </html>
